@@ -3,7 +3,7 @@ session_start();
     if(isset($_POST['enter'])){
         $data = ["login" => $_POST['userlogin'], "password" => $_POST['userpassword']];
         $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-        $curl = curl_init('http://18.193.128.69:84/api/Authorization/Login');
+        $curl = curl_init('http://18.192.116.51:84/api/Authorization/Login');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         
@@ -15,9 +15,9 @@ session_start();
         $result = curl_exec($curl);
         curl_close($curl);
         if(json_decode($result) == null){
-            $_SESSION['user_ID'] = file_get_contents('http://18.193.128.69:84/api/Authorization/GetUserIdByLogin?login='. $_POST['userlogin']);
+            $_SESSION['user_ID'] = file_get_contents('http://18.192.116.51:84/api/Authorization/GetUserIdByLogin?login='. $_POST['userlogin']);
             if(
-            json_decode(file_get_contents('http://18.193.128.69:84/api/Authorization/User/'.$_SESSION['user_ID']))->role == "admin"){
+            json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->role == "admin"){
                 header('Location: https://ghordetest.000webhostapp.com/adrejLox/adminLox.php');
             }
             else{
@@ -29,7 +29,7 @@ session_start();
     if(isset($_POST['registration'])){
         $data = ["login" => $_POST['userlogin'], "password" => $_POST['userpassword'], "firstName" => $_POST['user_first_name'], "lastName" => $_POST['user_last_name']];
         $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-        $curl = curl_init('http://18.193.128.69:84/api/Authorization/Register');
+        $curl = curl_init('http://18.192.116.51:84/api/Authorization/Register');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         

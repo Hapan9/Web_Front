@@ -7,15 +7,15 @@ if(isset($_POST['logout'])){
 }
 
 if(isset($_POST['startTest'])){
-    if(json_decode(file_get_contents("http://18.193.128.69:84/api/Authorization/GetUserAttempts?id=". $_POST['startTest']))->testState == 1){
+    if(json_decode(file_get_contents("http://18.192.116.51:84/api/Authorization/GetUserAttempts?id=". $_POST['startTest']))->testState == 1){
         header("Refresh:0");
     }
     else{
         $_SESSION['attempt_ID'] = $_POST['startTest'];
-        $data = json_decode(file_get_contents("http://18.193.128.69:84/api/Authorization/TestAttempt/". $_POST['startTest']));
+        $data = json_decode(file_get_contents("http://18.192.116.51:84/api/Authorization/TestAttempt/". $_POST['startTest']));
         $data->testState = 1;
         $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-        $curl = curl_init('http://18.193.128.69:84/api/Authorization/SaveAttemptToUser?userId='. $_SESSION['user_ID']);
+        $curl = curl_init('http://18.192.116.51:84/api/Authorization/SaveAttemptToUser?userId='. $_SESSION['user_ID']);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         
@@ -30,7 +30,7 @@ if(isset($_POST['startTest'])){
 }
 
 function GetAllAttempts(){
-    $attempts_array = json_decode(file_get_contents("http://18.193.128.69:84/api/Authorization/GetUserAttempts?id=". $_SESSION['user_ID']));
+    $attempts_array = json_decode(file_get_contents("http://18.192.116.51:84/api/Authorization/GetUserAttempts?id=". $_SESSION['user_ID']));
     $strint_to_return = '
     <form method="post">
         <table class="table">
@@ -48,7 +48,7 @@ function GetAllAttempts(){
             <tr>
                 <th scope="row">'. htmlspecialchars($i+1) .'</th>
                 <td>';
-                    $strint_to_return .= htmlspecialchars(json_decode(file_get_contents("http://18.193.128.69:84/api/Crud/Test/" . $attempts_array[$i]->testId))->name);
+                    $strint_to_return .= htmlspecialchars(json_decode(file_get_contents("http://18.192.116.51:84/api/Crud/Test/" . $attempts_array[$i]->testId))->name);
         $strint_to_return .= '
                 </td>
                 <td>';
@@ -115,7 +115,7 @@ function GetAllAttempts(){
     <nav class="navbar navbar-expand-lg navbar-dark d-none d-lg-block" style="z-index: 2000;">
         <div class="container-fluid">
             <div class="names navbar-brand nav-link">
-                <?=json_decode(file_get_contents('http://18.193.128.69:84/api/Authorization/User/'.$_SESSION['user_ID']))->firstName . ' ' . json_decode(file_get_contents('http://18.193.128.69:84/api/Authorization/User/'.$_SESSION['user_ID']))->lastName;?>
+                <?=json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->firstName . ' ' . json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->lastName;?>
             </div>
             <div class="logout navbar-brand nav-link">
                 <form style="display: inline" method="post">
