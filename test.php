@@ -9,9 +9,9 @@ if(isset($_POST['logout'])){
 
 function OnLoadPage(){
     //$_SESSION['attempt_ID']
-    $test_id = json_decode(file_get_contents('http://18.193.128.69:84/api/Authorization/TestAttempt/' . $_SESSION['attempt_ID']))->testId;
+    $test_id = json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/TestAttempt/' . $_SESSION['attempt_ID']))->testId;
     
-    $questions = json_decode(file_get_contents('http://18.193.128.69:84/api/Process/MixQuestions?testId=' . $test_id));
+    $questions = json_decode(file_get_contents('http://18.192.116.51:84/api/Process/MixQuestions?testId=' . $test_id));
     
     $string_to_return = '
     <center>
@@ -24,7 +24,7 @@ function OnLoadPage(){
                 <tr>
                     <th scope="col" colspan="2">
                         <h3>';
-        $string_to_return .= json_decode(file_get_contents('http://18.193.128.69:84/api/Crud/Question/' . $questions[$i]->id))->text;
+        $string_to_return .= json_decode(file_get_contents('http://18.192.116.51:84/api/Crud/Question/' . $questions[$i]->id))->text;
         
         $list_of_variants = $questions[$i]->answersIds;
         $string_to_return .= '
@@ -41,7 +41,7 @@ function OnLoadPage(){
                         <input type="checkbox" class="form-check-input" name="'.$questions[$i]->id.'*'.$list_of_variants[$j].'">
                     </th>
                     <td>';
-            $string_to_return .=  json_decode(file_get_contents('http://18.193.128.69:84/api/Crud/Answer/' . $list_of_variants[$j]))->text;
+            $string_to_return .=  json_decode(file_get_contents('http://18.192.116.51:84/api/Crud/Answer/' . $list_of_variants[$j]))->text;
             $string_to_return .= '
                     </td>
                 </tr>';
@@ -62,9 +62,9 @@ function OnLoadPage(){
 }
 
 if(isset($_POST['endTest'])){
-    $test_id = json_decode(file_get_contents('http://18.193.128.69:84/api/Authorization/TestAttempt/' . $_SESSION['attempt_ID']))->testId;
+    $test_id = json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/TestAttempt/' . $_SESSION['attempt_ID']))->testId;
     
-    $questions = json_decode(file_get_contents('http://18.193.128.69:84/api/Process/MixQuestions?testId=' . $test_id));
+    $questions = json_decode(file_get_contents('http://18.192.116.51:84/api/Process/MixQuestions?testId=' . $test_id));
     $grade = 100/count($questions);
     $mark = 0.0;
     $strtort = '';
@@ -78,16 +78,16 @@ if(isset($_POST['endTest'])){
                  $mark = $mark + $grade;
                  break;
              }
-             if(json_decode(file_get_contents('http://18.193.128.69:84/api/Crud/Answer/' . $list_of_variants[$j]))->isCorrect != isset($_POST[$name_of_checkbox])){
+             if(json_decode(file_get_contents('http://18.192.116.51:84/api/Crud/Answer/' . $list_of_variants[$j]))->isCorrect != isset($_POST[$name_of_checkbox])){
                  break;
              }
          }
     }
     
-    $data = json_decode(file_get_contents("http://18.193.128.69:84/api/Authorization/TestAttempt/". $_SESSION['attempt_ID']));
-    $data->testGrade = $mark;
+    $data = json_decode(file_get_contents("http://18.192.116.51:84/api/Authorization/TestAttempt/". $_SESSION['attempt_ID']));
+    $data->testGrade = var_dump(round($mark));
     $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-    $curl = curl_init('http://18.193.128.69:84/api/Authorization/SaveAttemptToUser?userId='. $_SESSION['user_ID']);
+    $curl = curl_init('http://18.192.116.51:84/api/Authorization/SaveAttemptToUser?userId='. $_SESSION['user_ID']);
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
     
@@ -125,7 +125,7 @@ if(isset($_POST['endTest'])){
     <nav class="navbar navbar-expand-lg navbar-dark d-none d-lg-block" style="z-index: 2000;">
         <div class="container-fluid">
             <div class="names navbar-brand nav-link">
-                <?=json_decode(file_get_contents('http://18.193.128.69:84/api/Authorization/User/'.$_SESSION['user_ID']))->firstName . ' ' . json_decode(file_get_contents('http://18.193.128.69:84/api/Authorization/User/'.$_SESSION['user_ID']))->lastName;?>
+                <?=json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->firstName . ' ' . json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->lastName;?>
             </div>
             <div class="logout navbar-brand nav-link">
                 <form style="display: inline" method="post">
