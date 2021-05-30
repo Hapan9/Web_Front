@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(isset($_POST['logout'])){
+if(isset($_POST['logout']) || !isset($_SESSION['user_ID']) || json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->role != "admin"){
     unset($_SESSION['user_ID']);
     unset($_SESSION['attempt_ID']);
     header('Location: https://ghordetest.000webhostapp.com/adrejLox/index.php');

@@ -1,10 +1,14 @@
 <?php
 session_start();
 
-if(isset($_POST['logout'])){
+if(isset($_POST['logout']) || !isset($_SESSION['user_ID'])){
     unset($_SESSION['user_ID']);
     unset($_SESSION['attempt_ID']);
     header('Location: https://ghordetest.000webhostapp.com/adrejLox/index.php');
+}
+
+if(!isset($_SESSION['attempt_ID'])){
+    header('https://ghordetest.000webhostapp.com/adrejLox/user_page.php');
 }
 
 function OnLoadPage(){
@@ -85,7 +89,7 @@ if(isset($_POST['endTest'])){
     }
     
     $data = json_decode(file_get_contents("http://18.192.116.51:84/api/Authorization/TestAttempt/". $_SESSION['attempt_ID']));
-    $data->testGrade = var_dump(round($mark));
+    $data->testGrade = intval($mark);
     $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
     $curl = curl_init('http://18.192.116.51:84/api/Authorization/SaveAttemptToUser?userId='. $_SESSION['user_ID']);
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");

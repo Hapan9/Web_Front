@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(isset($_POST['logout'])){
+if(isset($_POST['logout']) || !isset($_SESSION['user_ID'])){
     unset($_SESSION['user_ID']);
     unset($_SESSION['attempt_ID']);
     header('Location: https://ghordetest.000webhostapp.com/adrejLox/index.php');
