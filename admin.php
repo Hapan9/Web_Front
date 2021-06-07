@@ -1,17 +1,19 @@
 <?php
 session_start();
 
-if(isset($_POST['logout']) || !isset($_SESSION['user_ID']) || json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->role != "admin"){
+if(isset($_POST['logout']) || !isset($_SESSION['user_ID']) ||
+ json_decode(file_get_contents('http://18.223.196.57:84/api/Authorization/User/'.$_SESSION['user_ID']))->role != "admin")
+{
     unset($_SESSION['user_ID']);
     unset($_SESSION['attempt_ID']);
-    header('Location: https://ghordetest.000webhostapp.com/adrejLox/index.php');
+    header('Location: http://3.135.244.197:228/index.php');
 }
 
 if(isset($_POST['create_new_theme'])){
     
     $data = ["id" => "00000000-0000-0000-0000-000000000000", "name" => $_POST['new_theme_name']];
     $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-    $curl = curl_init('http://18.192.116.51:84/api/Crud/TestTheme');
+    $curl = curl_init('http://18.223.196.57:84/api/Crud/TestTheme');
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
     
@@ -24,7 +26,7 @@ if(isset($_POST['create_new_theme'])){
     curl_close($curl);
     header("Refresh:0");
 }
-
+//
 if(isset($_POST['create_test_btn'])){
     if(!($_POST['create_test_btn']>=0)){
         header("Refresh:0");
@@ -32,7 +34,7 @@ if(isset($_POST['create_test_btn'])){
     
     $data = ["id"=> "00000000-0000-0000-0000-000000000000", "name"=> $_POST['test_name'], "description"=> $_POST['test_description'], "questionsIds"=> [], "testThemeId"=> $_POST['selected_theme']];
     $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-    $curl = curl_init('http://18.192.116.51:84/api/Crud/Test');
+    $curl = curl_init('http://18.223.196.57:84/api/Crud/Test');
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
     
@@ -49,7 +51,7 @@ if(isset($_POST['create_test_btn'])){
     for($i = 0; $i<$_POST['create_test_btn']; $i++){
         $data = ["id" => "00000000-0000-0000-0000-000000000000", "text" => $_POST['question_' . $i], "answersIds" => [], "testId" => $testid];
         $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-        $curl = curl_init('http://18.192.116.51:84/api/Crud/Question');
+        $curl = curl_init('http://18.223.196.57:84/api/Crud/Question');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         
@@ -67,7 +69,7 @@ if(isset($_POST['create_test_btn'])){
         for($j = 0; $j<$_POST['all_answers_'. $i]; $j++){
             $data = ["id" => "00000000-0000-0000-0000-000000000000", "text" => $_POST['answer_text_' . $i . '_' . $j], "isCorrect" => isset($_POST['answer_checkbox_' . $i . '_' . $j]), "questionId" => $question_id];
             $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-            $curl = curl_init('http://18.192.116.51:84/api/Crud/Answer');
+            $curl = curl_init('http://18.223.196.57:84/api/Crud/Answer');
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
             
@@ -82,11 +84,11 @@ if(isset($_POST['create_test_btn'])){
             array_push($answers_ids, substr($result, 1, -1));
         }
         
-        $data = json_decode(file_get_contents("http://18.192.116.51:84/api/Crud/Question/". $question_id));
+        $data = json_decode(file_get_contents("http://18.223.196.57:84/api/Crud/Question/". $question_id));
         $data->answersIds = $answers_ids;
         $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
         
-        $curl = curl_init('http://18.192.116.51:84/api/Crud/Question');
+        $curl = curl_init('http://18.223.196.57:84/api/Crud/Question');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         
@@ -99,10 +101,10 @@ if(isset($_POST['create_test_btn'])){
         curl_close($curl);
     }
     
-    $data = json_decode(file_get_contents("http://18.192.116.51:84/api/Crud/Test/". $testid));
+    $data = json_decode(file_get_contents("http://18.193.128.69:84/api/Crud/Test/". $testid));
     $data->questionsIds = $questions_ids;
     $data_string = json_encode ($data, JSON_UNESCAPED_UNICODE);
-    $curl = curl_init('http://18.192.116.51:84/api/Crud/Test');
+    $curl = curl_init('http://18.223.196.57:84/api/Crud/Test');
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
     
@@ -118,13 +120,13 @@ if(isset($_POST['create_test_btn'])){
 
 if(isset($_POST['add_attempts'])){
     for($i=0; $i<$_POST['count_of_attempts']; $i++){
-        $result = file_get_contents('http://18.192.116.51:84/api/Authorization/AddNewAttemptToUser?userId='.$_POST['selected_user'].'&testId='.$_POST['selected_test']);
+        $result = file_get_contents('http://18.223.196.57:84/api/Authorization/AddNewAttemptToUser?userId='.$_POST['selected_user'].'&testId='.$_POST['selected_test']);
     }
     header("Refresh:0");
 }
 
 function AllThems(){
-    $all_thems = json_decode(file_get_contents('http://18.192.116.51:84/api/Crud/TestTheme'));
+    $all_thems = json_decode(file_get_contents('http://18.223.196.57:84/api/Crud/TestTheme'));
     $sting_to_returm = '';
     for($i = 0; $i<count($all_thems);$i++){
         $sting_to_returm .= '
@@ -138,7 +140,7 @@ function AllThems(){
 }
 
 function AllUsers(){
-    $all_users = json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User'));
+    $all_users = json_decode(file_get_contents('http://18.223.196.57:84/api/Authorization/User'));
     $sting_to_returm = '';
     for($i = 0; $i<count($all_users);$i++){
         $sting_to_returm .= '
@@ -152,7 +154,7 @@ function AllUsers(){
 }
 
 function AllTests(){
-    $all_tests = json_decode(file_get_contents('http://18.192.116.51:84/api/Crud/Test'));
+    $all_tests = json_decode(file_get_contents('http://18.223.196.57:84/api/Crud/Test'));
     $sting_to_returm = '';
     for($i = 0; $i<count($all_tests);$i++){
         $sting_to_returm .= '
@@ -160,7 +162,7 @@ function AllTests(){
         if($i==0){
             $sting_to_returm .= ' selected ';
         }
-        $sting_to_returm .= ' value="'.$all_tests[$i]->id.'">'. json_decode(file_get_contents('http://18.192.116.51:84/api/Crud/TestTheme/' . $all_tests[$i]->testThemeId))->name . ' - ' . $all_tests[$i]->name . ' : ' . $all_tests[$i]->description . '</option>';
+        $sting_to_returm .= ' value="'.$all_tests[$i]->id.'">'. json_decode(file_get_contents('http://18.223.196.57:84/api/Crud/TestTheme/' . $all_tests[$i]->testThemeId))->name . ' - ' . $all_tests[$i]->name . ' : ' . $all_tests[$i]->description . '</option>';
     }
     return $sting_to_returm;
 }
@@ -197,7 +199,7 @@ function AllTests(){
     <nav class="navbar navbar-expand-lg navbar-dark d-none d-lg-block" style="z-index: 2000;">
         <div class="container-fluid">
             <div class="names navbar-brand nav-link">
-                <?=json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->firstName . ' ' . json_decode(file_get_contents('http://18.192.116.51:84/api/Authorization/User/'.$_SESSION['user_ID']))->lastName;?>
+                <?=json_decode(file_get_contents('http://18.223.196.57:84/api/Authorization/User/'.$_SESSION['user_ID']))->firstName . ' ' . json_decode(file_get_contents('http://18.223.196.57:84/api/Authorization/User/'.$_SESSION['user_ID']))->lastName;?>
             </div>
             <div class="logout navbar-brand nav-link">
                 <form style="display: inline" method="post">
