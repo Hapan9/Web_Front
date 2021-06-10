@@ -40,12 +40,6 @@ session_start();
         );
         $result = curl_exec($curl);
         curl_close($result);
-        if(json_decode($result)->status == 400){
-            print_r('Такой юзер уже есть');
-        }
-        else{
-            print_r('зарегано');
-        }
     }
 ?>
 
@@ -123,7 +117,7 @@ session_start();
     <style>
         body {
             background: url("https://look.com.ua/pic/201602/1920x1080/look.com.ua-150005.jpg");
-            background-size: cover cover;
+            background-size: cover;
             background-position: top;
             background-attachment:fixed;
             background-repeat: no-repeat;
